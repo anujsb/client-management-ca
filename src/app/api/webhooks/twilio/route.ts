@@ -1,36 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { clients, requests } from "@/lib/db/schema";
-import { eq, and, or } from "drizzle-orm";
+import { eq, and, or, desc } from "drizzle-orm";
+import { evaluateClientReply } from "@/services/ai.service";
+import { sendWhatsAppMessage } from "@/services/whatsapp.service";
 
 export async function POST(req: NextRequest) {
     try {
-        // Twilio sends data as form data
         const formData = await req.formData();
 
-        // Extract incoming message details
-        const fromWhatsApp = formData.get("From") as string; // e.g., "whatsapp:+919876543210"
-        const body = formData.get("Body") as string; // The text the client typed
-        const numMedia = parseInt((formData.get("NumMedia") as string) || "0"); // Number of attached files
+        const fromWhatsApp = formData.get("From") as string;
+        const body = formData.get("Body") as string;
+        const numMediaStr = formData.get("NumMedia") as string;
+        const numMedia = parseInt(numMediaStr || "0");
+        const mediaUrl = numMedia > 0 ? (formData.get("MediaUrl0") as string) : null;
 
-        // Clean the phone number to match our DB (remove "whatsapp:" prefix)
+        // 🛑 DEBUG LOG 1: What exactly did Twilio send?
+        console.log("--- INCOMING WEBHOOK ---");
+        console.log(`Body: "${body}"`);
+        console.log(`NumMedia: ${numMedia}`);
+        console.log(`MediaUrl0: ${mediaUrl}`);
+        console.log("------------------------");
+
         const clientPhone = fromWhatsApp.replace("whatsapp:", "");
 
-        // 1. Find the client by phone number
         const clientRecord = await db
             .select()
             .from(clients)
             .where(eq(clients.phone, clientPhone))
             .limit(1);
 
-        if (!clientRecord.length) {
-            console.log("Unrecognized number:", clientPhone);
-            return new NextResponse("Not our client", { status: 200 }); // Return 200 so Twilio stops retrying
-        }
+        if (!clientRecord.length) return new NextResponse("<Response></Response>", { status: 200, headers: { "Content-Type": "text/xml" } });
 
         const client = clientRecord[0];
 
-        // 2. Find their active request (pending or incorrect status)
         const activeRequests = await db
             .select()
             .from(requests)
@@ -40,21 +43,50 @@ export async function POST(req: NextRequest) {
                     or(eq(requests.status, "pending"), eq(requests.status, "incorrect"))
                 )
             )
+            .orderBy(desc(requests.createdAt))
             .limit(1);
 
-        if (!activeRequests.length) {
-            console.log("No active requests for client:", client.name);
-            return new NextResponse("No active request", { status: 200 });
-        }
+        if (!activeRequests.length) return new NextResponse("<Response></Response>", { status: 200, headers: { "Content-Type": "text/xml" } });
 
         const activeRequest = activeRequests[0];
 
-        // TODO: Step 3 - Send 'body', 'numMedia', and 'activeRequest.aiContext' to Groq
-        console.log(`Received from ${client.name}: "${body}". Attached files: ${numMedia}`);
-        console.log(`Original Request: ${activeRequest.aiContext}`);
+        const aiDecision = await evaluateClientReply(
+            activeRequest.aiContext || "",
+            body,
+            mediaUrl
+        );
 
-        // Return 200 immediately to acknowledge Twilio's webhook
-        return new NextResponse("OK", { status: 200 });
+
+        // 🛑 DEBUG LOG 2: What did Groq decide?
+        console.log("--- AI DECISION ---");
+        console.log(`Status: ${aiDecision.status}`);
+        console.log(`Valid File?: ${aiDecision.validFileExtracted}`);
+        console.log("-------------------");
+
+        let updatedDocumentUrl = activeRequest.documentUrl;
+        if (aiDecision.validFileExtracted && mediaUrl) {
+            updatedDocumentUrl = activeRequest.documentUrl
+                ? `${activeRequest.documentUrl},${mediaUrl}`
+                : mediaUrl;
+        }
+
+        // 2. Memory Upgrade: Append the conversation history so the AI remembers what it already got!
+        const updatedContext = `${activeRequest.aiContext}\n[System: Received document. Bot replied: "${aiDecision.replyMessage}"]`;
+
+        // 3. Update the Database
+        await db
+            .update(requests)
+            .set({
+                status: aiDecision.status,
+                documentUrl: updatedDocumentUrl,
+                aiContext: updatedContext, // Save the memory!
+                updatedAt: new Date()
+            })
+            .where(eq(requests.id, activeRequest.id));
+
+        await sendWhatsAppMessage(client.phone, aiDecision.replyMessage);
+
+        return new NextResponse("<Response></Response>", { status: 200, headers: { "Content-Type": "text/xml" } });
 
     } catch (error) {
         console.error("Webhook Error:", error);

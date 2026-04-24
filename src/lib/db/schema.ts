@@ -33,9 +33,10 @@ export const requests = pgTable("requests", {
     id: uuid("id").primaryKey().defaultRandom(),
     caId: uuid("ca_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
     clientId: uuid("client_id").references(() => clients.id, { onDelete: "cascade" }).notNull(),
-    documentType: varchar("document_type", { length: 50 }).notNull(), // e.g., 'GSTR1', 'GSTR2B'
+    documentType: varchar("document_type", { length: 50 }).notNull(),
     status: requestStatusEnum("status").default("pending").notNull(),
-    aiContext: text("ai_context"), // Store conversation history/summary for Groq LLM
+    aiContext: text("ai_context"),
+    documentUrl: text("document_url"), // <-- NEW FIELD ADDED
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -84,3 +85,4 @@ export const templatesRelations = relations(templates, ({ one }) => ({
         references: [users.id],
     }),
 }));
+

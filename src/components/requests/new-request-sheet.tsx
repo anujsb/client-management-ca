@@ -38,6 +38,7 @@ export function NewRequestSheet({
     const [messagePreview, setMessagePreview] = useState<string>("");
     const [isPending, startTransition] = useTransition();
 
+
     useEffect(() => {
         if (!selectedTemplateId) {
             setMessagePreview("");
@@ -48,10 +49,22 @@ export function NewRequestSheet({
 
         if (template) {
             let draft = template.content;
-            if (client) draft = draft.replace(/{{client_name}}/g, client.name);
+
+            // Replace Client Name
+            if (client) {
+                draft = draft.replace(/{{client_name}}/g, client.name);
+            }
+
+            // Dynamically calculate and replace the previous month (e.g., "March")
+            const date = new Date();
+            date.setMonth(date.getMonth() - 1);
+            const previousMonth = date.toLocaleString('en-IN', { month: 'long' });
+            draft = draft.replace(/{{month}}/g, previousMonth);
+
             setMessagePreview(draft);
         }
     }, [selectedClientId, selectedTemplateId, clients, templates]);
+
 
     const handleDispatch = () => {
         const template = templates.find((t) => t.id === selectedTemplateId);
