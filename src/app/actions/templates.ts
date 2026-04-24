@@ -7,18 +7,17 @@ import { eq, or, isNull } from "drizzle-orm";
 
 export async function getTemplatesAction() {
     const session = await auth();
-    if (!session?.user?.id) throw new Error("Unauthorized");
+    if (!session?.user?.id) {
+        return [];
+    }
 
-    // Fetch global templates (caId is null) AND templates created by this specific CA
-    const availableTemplates = await db
-        .select()
-        .from(templates)
-        .where(
-            or(
-                isNull(templates.caId),
-                eq(templates.caId, session.user.id as string)
-            )
-        );
+    // Return system templates (caId is null) or templates created by this CA
+    const result = await db.select().from(templates).where(
+        or(
+            isNull(templates.caId),
+            eq(templates.caId, session.user.id)
+        )
+    );
 
-    return availableTemplates;
+    return result;
 }

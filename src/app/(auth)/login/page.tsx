@@ -1,5 +1,8 @@
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
 export default function LoginPage({
     searchParams,
@@ -28,29 +31,76 @@ export default function LoginPage({
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
-            <div className="w-full max-w-md space-y-8 rounded-2xl bg-white p-10 shadow-sm border border-slate-200">
-
-                <div className="text-center">
-                    <h2 className="text-2xl font-bold tracking-tight text-slate-900">
-                        CA Portal Login
-                    </h2>
-                    <p className="mt-2 text-sm text-slate-500">
-                        Enter your credentials to access the dashboard.
-                    </p>
-                </div>
-
-                {searchParams?.error === "CredentialsSignin" && (
-                    <div className="rounded-md bg-red-50 p-3 text-sm text-red-500 border border-red-100 text-center">
-                        Invalid email or password. Please try again.
+        <div className="min-h-screen bg-gradient-to-br from-white via-blue-50 to-white flex items-center justify-center px-4 py-12">
+            {/* Left side - Branding */}
+            <div className="hidden lg:flex lg:w-1/2 flex-col justify-center items-start max-w-lg">
+                <Link href="/" className="mb-8 flex items-center gap-2">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
+                        <span className="font-bold text-white text-sm">CA</span>
                     </div>
-                )}
+                    <span className="text-2xl font-bold text-slate-900">DocFlow</span>
+                </Link>
+                <h1 className="text-4xl font-bold text-slate-900 leading-tight mb-4">
+                    Welcome back to your CA dashboard
+                </h1>
+                <p className="text-lg text-slate-600 mb-8">
+                    Access your document requests, client management, and automation tools in one secure platform.
+                </p>
+                <div className="space-y-4 text-slate-700">
+                    <div className="flex gap-3 items-start">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 flex-shrink-0 mt-0.5">
+                            <span className="text-blue-600 text-sm">✓</span>
+                        </div>
+                        <p className="text-sm">Send automated WhatsApp requests to clients</p>
+                    </div>
+                    <div className="flex gap-3 items-start">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 flex-shrink-0 mt-0.5">
+                            <span className="text-blue-600 text-sm">✓</span>
+                        </div>
+                        <p className="text-sm">Track document submissions in real-time</p>
+                    </div>
+                    <div className="flex gap-3 items-start">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 flex-shrink-0 mt-0.5">
+                            <span className="text-blue-600 text-sm">✓</span>
+                        </div>
+                        <p className="text-sm">Manage multiple clients and document types</p>
+                    </div>
+                </div>
+            </div>
 
-                {/* Connect the form to the new action */}
-                <form action={handleLogin} className="space-y-6">
-                    <div className="space-y-4">
+            {/* Right side - Login Form */}
+            <div className="w-full max-w-md lg:w-1/2 lg:pl-8">
+                <div className="rounded-2xl bg-white p-8 shadow-lg border border-gray-200">
+                    {/* Mobile header */}
+                    <div className="lg:hidden mb-6 text-center">
+                        <Link href="/" className="inline-flex items-center gap-2 mb-4">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
+                                <span className="font-bold text-white text-sm">CA</span>
+                            </div>
+                            <span className="text-xl font-bold text-slate-900">DocFlow</span>
+                        </Link>
+                    </div>
+
+                    <div className="text-center mb-8">
+                        <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+                            Sign in to your account
+                        </h2>
+                        <p className="mt-2 text-sm text-slate-600">
+                            Access your dashboard and manage your clients
+                        </p>
+                    </div>
+
+                    {searchParams?.error === "CredentialsSignin" && (
+                        <div className="rounded-lg bg-red-50 p-4 text-sm text-red-700 border border-red-200 mb-6">
+                            <p className="font-medium">Invalid credentials</p>
+                            <p>Please check your email and password and try again.</p>
+                        </div>
+                    )}
+
+                    {/* Login Form */}
+                    <form action={handleLogin} className="space-y-6">
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-slate-700">
+                            <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
                                 Email Address
                             </label>
                             <input
@@ -58,13 +108,13 @@ export default function LoginPage({
                                 name="email"
                                 type="email"
                                 required
-                                className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500 sm:text-sm"
-                                placeholder="admin@ca.com"
+                                className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                                placeholder="you@example.com"
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-slate-700">
+                            <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-2">
                                 Password
                             </label>
                             <input
@@ -72,20 +122,26 @@ export default function LoginPage({
                                 name="password"
                                 type="password"
                                 required
-                                className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500 sm:text-sm"
+                                className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                                 placeholder="••••••••"
                             />
                         </div>
+
+                        <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5">
+                            Sign in
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                    </form>
+
+                    <div className="mt-6 pt-6 border-t border-gray-200">
+                        <p className="text-center text-sm text-slate-600">
+                            Don&apos;t have an account?{" "}
+                            <Link href="/signup" className="font-semibold text-blue-600 hover:text-blue-700">
+                                Create one now
+                            </Link>
+                        </p>
                     </div>
-
-                    <button
-                        type="submit"
-                        className="flex w-full justify-center rounded-md bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-slate-800 transition-colors"
-                    >
-                        Sign in
-                    </button>
-                </form>
-
+                </div>
             </div>
         </div>
     );
