@@ -6,7 +6,7 @@ import { CheckCircle2, MessageSquare, BarChart3, Zap, ArrowRight, Users } from '
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-blue-50 to-white">
+    <div className="min-h-screen bg-linear-to-b from-white via-blue-50 to-white">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-sm">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
@@ -34,7 +34,7 @@ export default function LandingPage() {
         <div className="text-center">
           <h1 className="text-5xl font-bold tracking-tight text-slate-900 sm:text-6xl">
             Document Collection,{' '}
-            <span className="bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent">
               Automated
             </span>
           </h1>
@@ -128,7 +128,7 @@ export default function LandingPage() {
         <div className="space-y-8">
           {/* Step 1 */}
           <div className="flex gap-8 items-start">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white font-bold flex-shrink-0">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white font-bold shrink-0">
               1
             </div>
             <div>
@@ -139,7 +139,7 @@ export default function LandingPage() {
 
           {/* Step 2 */}
           <div className="flex gap-8 items-start">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white font-bold flex-shrink-0">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white font-bold shrink-0">
               2
             </div>
             <div>
@@ -150,7 +150,7 @@ export default function LandingPage() {
 
           {/* Step 3 */}
           <div className="flex gap-8 items-start">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white font-bold flex-shrink-0">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white font-bold shrink-0">
               3
             </div>
             <div>
@@ -161,7 +161,7 @@ export default function LandingPage() {
 
           {/* Step 4 */}
           <div className="flex gap-8 items-start">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white font-bold flex-shrink-0">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white font-bold shrink-0">
               4
             </div>
             <div>
@@ -174,7 +174,7 @@ export default function LandingPage() {
 
       {/* CTA Section */}
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <div className="rounded-2xl bg-gradient-to-r from-blue-600 to-blue-500 px-8 py-16 text-center sm:px-12">
+        <div className="rounded-2xl bg-linear-to-r from-blue-600 to-blue-500 px-8 py-16 text-center sm:px-12">
           <h2 className="text-3xl font-bold text-white sm:text-4xl">Ready to Transform Your Workflow?</h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-blue-100">
             Join hundreds of CAs who are saving hours every week with DocFlow.

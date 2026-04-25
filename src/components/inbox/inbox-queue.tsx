@@ -8,7 +8,7 @@ export function InboxQueue({ requests, selectedReqId, onSelect }: any) {
     const received = requests.filter((r: any) => r.status === "completed");
 
     return (
-        <div className="w-[320px] flex flex-col border-r border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 flex-shrink-0">
+        <div className="w-[320px] flex flex-col border-r border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 shrink-0">
             <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
                 <h2 className="font-bold text-lg text-slate-900 dark:text-slate-100">Incoming Queue</h2>
                 <div className="flex gap-2 text-slate-400">
@@ -37,7 +37,7 @@ export function InboxQueue({ requests, selectedReqId, onSelect }: any) {
                                 >
                                     <div className="flex justify-between items-start mb-1">
                                         <div className="flex items-center gap-3">
-                                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${req.status === 'incorrect' ? 'bg-red-100 text-red-600' : 'bg-emerald-100 text-emerald-600'
+                                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${req.status === 'incorrect' ? 'bg-red-100 text-red-600' : 'bg-emerald-100 text-emerald-600'
                                                 }`}>
                                                 <FileIcon type={req.documentType} />
                                             </div>

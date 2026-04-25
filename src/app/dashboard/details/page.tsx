@@ -10,7 +10,9 @@ import { ClientTimeline } from "@/components/details/client-timeline";
 
 export default async function ClientDetailPage() {
     const session = await auth();
-    const userId = session!.user.id as string;
+    const userId = session?.user?.id as string;
+
+    if (!userId) return null;
 
     // 1. Fetch real backend data (For demo, we grab the most recently added client)
     const allClients = await db.select().from(clients).where(eq(clients.caId, userId)).orderBy(desc(clients.createdAt)).limit(1);

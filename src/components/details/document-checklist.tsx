@@ -49,7 +49,7 @@ export function DocumentChecklist({ requests }: { requests: any[] }) {
                         ) : requests.map((req) => (
                             <div key={req.id} className="grid grid-cols-12 gap-4 py-4 border-b border-slate-50 dark:border-slate-800/50 items-center">
                                 <div className="col-span-5 flex items-start gap-3">
-                                    <div className={`mt-0.5 p-1.5 rounded flex-shrink-0 ${req.status === 'completed' ? 'bg-red-50 text-red-500' : 'bg-slate-100 text-slate-400'}`}>
+                                    <div className={`mt-0.5 p-1.5 rounded shrink-0 ${req.status === 'completed' ? 'bg-red-50 text-red-500' : 'bg-slate-100 text-slate-400'}`}>
                                         {req.documentUrl ? <ImageIcon className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
                                     </div>
                                     <div>
@@ -64,7 +64,7 @@ export function DocumentChecklist({ requests }: { requests: any[] }) {
 
                                 <div className="col-span-2">
                                     <Badge variant="outline" className={`text-[10px] px-2 py-0.5 font-semibold uppercase tracking-wider ${req.status === 'completed' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' :
-                                            req.status === 'incorrect' ? 'bg-red-50 text-red-600 border-red-200' : 'bg-orange-50 text-orange-600 border-orange-200'
+                                        req.status === 'incorrect' ? 'bg-red-50 text-red-600 border-red-200' : 'bg-orange-50 text-orange-600 border-orange-200'
                                         }`}>
                                         {req.status === 'completed' ? 'Verified' : req.status === 'incorrect' ? 'Flagged' : 'Chasing'}
                                     </Badge>

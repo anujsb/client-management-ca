@@ -7,7 +7,7 @@ import { LayoutGrid, Filter, UserPlus, MessageSquare, FileText, ShieldCheck } fr
 // Server Actions & Modals
 import { AddClientDialog } from "@/components/clients/add-client-dialog";
 import { NewRequestSheet } from "@/components/requests/new-request-sheet";
-import { getTemplatesAction } from "@/app/actions/templates";
+import { getTemplatesAction } from "@/actions/templates";
 
 // Modular UI Components
 import { MetricCard } from "@/components/dashboard/metric-card";
@@ -16,7 +16,12 @@ import { RecentActivity } from "@/components/dashboard/recent-activity";
 
 export default async function DashboardOverviewPage() {
     const session = await auth();
-    const userId = session!.user.id as string;
+    const userId = session?.user?.id as string;
+
+    if (!userId) {
+        // This should be handled by the middleware/auth callback, but adding a guard for TS
+        return null;
+    }
 
     // 1. Fetch Backend Data
     const caClients = await db.select().from(clients).where(eq(clients.caId, userId));

@@ -13,8 +13,7 @@ const db = drizzle(sql);
 const globalTemplates = [
     {
         name: "GSTR-1 Filing Documents",
-        category: "gst" as const,
-        body: `Dear {clientName},
+        content: `Dear {clientName},
 
 Hope you are well. 
 
@@ -29,12 +28,10 @@ Please share the documents on WhatsApp at your earliest convenience.
 Regards,
 {caName}
 {firmName}`,
-        requiredDocs: JSON.stringify(["sales_register", "credit_notes", "export_invoices"]),
     },
     {
         name: "GSTR-2B Reconciliation",
-        category: "gst" as const,
-        body: `Dear {clientName},
+        content: `Dear {clientName},
 
 For *GSTR-2B reconciliation for {period}*, we need:
 
@@ -47,12 +44,10 @@ Kindly share at the earliest.
 Regards,
 {caName}
 {firmName}`,
-        requiredDocs: JSON.stringify(["purchase_register", "import_docs", "rcm_invoices"]),
     },
     {
         name: "GSTR-3B Filing",
-        category: "gst" as const,
-        body: `Dear {clientName},
+        content: `Dear {clientName},
 
 For *GSTR-3B filing for {period}*, please share:
 
@@ -66,12 +61,10 @@ Please send by {deadline}.
 Regards,
 {caName}
 {firmName}`,
-        requiredDocs: JSON.stringify(["sales_summary", "purchase_summary", "itc_details"]),
     },
     {
         name: "ITR Filing — Salaried",
-        category: "income_tax" as const,
-        body: `Dear {clientName},
+        content: `Dear {clientName},
 
 For your *Income Tax Return (ITR) filing for FY {period}*, we need:
 
@@ -86,12 +79,10 @@ Please share at the earliest to avoid last-minute rush.
 Regards,
 {caName}
 {firmName}`,
-        requiredDocs: JSON.stringify(["form_16", "form_26as", "bank_statements", "investment_proofs"]),
     },
     {
         name: "ITR Filing — Business",
-        category: "income_tax" as const,
-        body: `Dear {clientName},
+        content: `Dear {clientName},
 
 For *Business ITR filing for FY {period}*, please share:
 
@@ -106,12 +97,10 @@ For *Business ITR filing for FY {period}*, please share:
 Regards,
 {caName}
 {firmName}`,
-        requiredDocs: JSON.stringify(["p_and_l", "balance_sheet", "bank_statements", "form_26as", "tds_certificates"]),
     },
     {
         name: "TDS Return (26Q/24Q)",
-        category: "tds" as const,
-        body: `Dear {clientName},
+        content: `Dear {clientName},
 
 For *TDS Return filing for Q{quarter} FY {period}*, we need:
 
@@ -124,12 +113,10 @@ Please share at the earliest to file before due date.
 Regards,
 {caName}
 {firmName}`,
-        requiredDocs: JSON.stringify(["vendor_payment_details", "tds_challans"]),
     },
     {
         name: "Balance Sheet & Audit",
-        category: "audit" as const,
-        body: `Dear {clientName},
+        content: `Dear {clientName},
 
 For preparation of *Financial Statements / Audit for FY {period}*, we require:
 
@@ -146,7 +133,6 @@ Kindly compile and share at the earliest.
 Regards,
 {caName}
 {firmName}`,
-        requiredDocs: JSON.stringify(["bank_statements", "cash_book", "ledgers", "debtors_creditors", "loan_statements", "asset_details", "stock_statement"]),
     },
 ];
 
@@ -159,7 +145,6 @@ async function seed() {
             .values({
                 caId: null, // null = global, visible to all CAs
                 ...template,
-                isActive: true,
             })
             .onConflictDoNothing();
 

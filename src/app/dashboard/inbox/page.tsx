@@ -6,7 +6,9 @@ import { InboxWorkspace } from "@/components/inbox/inbox-workspace";
 
 export default async function InboxPage() {
     const session = await auth();
-    const userId = session!.user.id as string;
+    const userId = session?.user?.id as string;
+
+    if (!userId) return null;
 
     // 1. Fetch requests that actually have documents (not pending) for this CA
     const incomingRequests = await db

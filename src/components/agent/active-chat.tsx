@@ -21,7 +21,7 @@ export function ActiveChat({ client, requests }: any) {
 
     return (
         <div className="flex-1 flex flex-col bg-[#F9F6F0] dark:bg-slate-900 relative">
-            <div className="h-16 px-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex items-center justify-between flex-shrink-0">
+            <div className="h-16 px-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-3">
                     <Avatar className="w-10 h-10">
                         <AvatarFallback className="bg-indigo-100 text-indigo-700">{client.name.substring(0, 2).toUpperCase()}</AvatarFallback>
@@ -44,7 +44,7 @@ export function ActiveChat({ client, requests }: any) {
 
                     {activeRequest && (
                         <div className="flex gap-3 max-w-[85%]">
-                            <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0 mt-1">
+                            <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center shrink-0 mt-1">
                                 <span className="text-orange-500 text-sm">🤖</span>
                             </div>
                             <div>
@@ -65,7 +65,7 @@ export function ActiveChat({ client, requests }: any) {
 
                     {activeRequest?.documentUrl && (
                         <div className="flex gap-3 max-w-[85%] self-end flex-row-reverse">
-                            <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0 mt-1">
+                            <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center shrink-0 mt-1">
                                 <span className="text-indigo-700 text-xs font-bold">{client.name.substring(0, 1)}</span>
                             </div>
                             <div className="flex flex-col items-end">

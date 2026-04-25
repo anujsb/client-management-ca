@@ -11,9 +11,9 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { addClientAction } from "@/app/actions/clients";
+import { addClientAction } from "@/actions/clients";
 
-export function AddClientDialog() {
+export function AddClientDialog({ customTrigger }: { customTrigger?: React.ReactNode }) {
     const [open, setOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -30,9 +30,11 @@ export function AddClientDialog() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="bg-slate-900 text-white hover:bg-slate-800">
-                    + New Client
-                </Button>
+                {customTrigger || (
+                    <Button className="bg-slate-900 text-white hover:bg-slate-800">
+                        + New Client
+                    </Button>
+                )}
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>

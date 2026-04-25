@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 
 export function AgentInbox({ clients, requests, selectedClientId, onSelectClient }: any) {
     return (
-        <div className="w-[320px] flex flex-col border-r border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 flex-shrink-0">
+        <div className="w-[320px] flex flex-col border-r border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 shrink-0">
             <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
                 <h2 className="font-bold text-lg text-slate-900 dark:text-slate-100">Inbox</h2>
                 <div className="flex gap-2 text-slate-400">
@@ -46,7 +46,7 @@ export function AgentInbox({ clients, requests, selectedClientId, onSelectClient
                                     {latestRequest && (
                                         <div className="flex gap-2 mt-2 ml-13">
                                             <Badge className={`border-none text-[10px] px-1.5 py-0 ${latestRequest.status === 'completed' ? 'bg-emerald-100 text-emerald-700' :
-                                                    latestRequest.status === 'incorrect' ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700'
+                                                latestRequest.status === 'incorrect' ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700'
                                                 }`}>
                                                 {latestRequest.status === 'incorrect' ? 'Flagged' : latestRequest.status === 'pending' ? 'Chasing' : 'Received'}
                                             </Badge>

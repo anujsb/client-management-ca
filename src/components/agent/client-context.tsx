@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 
 export function ClientContext({ client, requests }: any) {
     return (
-        <div className="w-[320px] flex flex-col border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex-shrink-0 p-6 overflow-y-auto">
+        <div className="w-[320px] flex flex-col border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shrink-0 p-6 overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
                 <h3 className="font-semibold text-slate-900 dark:text-slate-100">Client Context</h3>
             </div>
@@ -37,7 +37,7 @@ export function ClientContext({ client, requests }: any) {
                                 {req.documentType}
                             </span>
                             <Badge className={`font-normal shadow-none ${req.status === 'completed' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' :
-                                    req.status === 'incorrect' ? 'bg-red-50 text-red-600 border-red-200' : 'bg-orange-50 text-orange-600 border-orange-200'
+                                req.status === 'incorrect' ? 'bg-red-50 text-red-600 border-red-200' : 'bg-orange-50 text-orange-600 border-orange-200'
                                 }`}>
                                 {req.status === 'incorrect' ? 'Flagged' : req.status === 'pending' ? 'Missing' : 'Received'}
                             </Badge>

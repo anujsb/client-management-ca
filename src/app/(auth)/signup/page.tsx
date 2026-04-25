@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signupAction, loginAction } from "@/lib/actions/auth.actions";
+import { signupAction, loginAction } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 
@@ -28,7 +28,7 @@ export default function SignupPage() {
             // 1. Create account
             const signupResult = await signupAction(formData);
             if (!signupResult.success) {
-                setError(signupResult.error);
+                setError(signupResult.error ?? "Failed to create account");
                 return;
             }
 
@@ -46,7 +46,7 @@ export default function SignupPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-white via-blue-50 to-white flex items-center justify-center px-4 py-12">
+        <div className="min-h-screen bg-linear-to-br from-white via-blue-50 to-white flex items-center justify-center px-4 py-12">
             {/* Left side - Benefits */}
             <div className="hidden lg:flex lg:w-1/2 flex-col justify-center items-start max-w-lg">
                 <Link href="/" className="mb-8 flex items-center gap-2">
@@ -61,7 +61,7 @@ export default function SignupPage() {
 
                 <div className="space-y-4">
                     <div className="flex gap-4 items-start">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 flex-shrink-0 mt-0">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 shrink-0 mt-0">
                             <CheckCircle2 className="h-6 w-6 text-blue-600" />
                         </div>
                         <div>
@@ -71,7 +71,7 @@ export default function SignupPage() {
                     </div>
 
                     <div className="flex gap-4 items-start">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 flex-shrink-0 mt-0">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 shrink-0 mt-0">
                             <CheckCircle2 className="h-6 w-6 text-blue-600" />
                         </div>
                         <div>
@@ -81,7 +81,7 @@ export default function SignupPage() {
                     </div>
 
                     <div className="flex gap-4 items-start">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 flex-shrink-0 mt-0">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 shrink-0 mt-0">
                             <CheckCircle2 className="h-6 w-6 text-blue-600" />
                         </div>
                         <div>

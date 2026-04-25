@@ -20,7 +20,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { dispatchRequestAction } from "@/app/actions/requests"; // Import the Twilio action
+import { dispatchRequestAction } from "@/actions/requests"; // Import the Twilio action
 
 type Client = { id: string; name: string; phone: string; gstin: string };
 type Template = { id: string; name: string; content: string };
@@ -28,9 +28,11 @@ type Template = { id: string; name: string; content: string };
 export function NewRequestSheet({
     clients,
     templates,
+    customTrigger,
 }: {
     clients: Client[];
     templates: Template[];
+    customTrigger?: React.ReactNode;
 }) {
     const [open, setOpen] = useState(false);
     const [selectedClientId, setSelectedClientId] = useState<string>("");
@@ -85,10 +87,12 @@ export function NewRequestSheet({
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <Button className="bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm flex items-center gap-2">
-                    <MessageSquare className="w-4 h-4" />
-                    Dispatch Request
-                </Button>
+                {customTrigger || (
+                    <Button className="bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm flex items-center gap-2">
+                        <MessageSquare className="w-4 h-4" />
+                        Dispatch Request
+                    </Button>
+                )}
             </SheetTrigger>
             <SheetContent className="sm:max-w-md w-full overflow-y-auto bg-slate-50">
                 <SheetHeader className="pb-6 border-b border-slate-200">

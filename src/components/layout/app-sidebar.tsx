@@ -19,7 +19,7 @@ function NavItem({ icon, label, active, badge, href = "#" }: { icon: React.React
 
 export function Sidebar() {
     return (
-        <aside className="w-64 bg-white border-r border-border flex flex-col justify-between flex-shrink-0 h-full">
+        <aside className="w-64 bg-white border-r border-border flex flex-col justify-between shrink-0 h-full">
             <div>
                 {/* Logo */}
                 <div className="h-16 flex items-center px-6 border-b border-border/50">

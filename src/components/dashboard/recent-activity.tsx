@@ -11,8 +11,8 @@ export function RecentActivity({ activities }: { activities: Activity[] }) {
                 {activities.map((activity, index) => (
                     <div key={activity.id} className="flex gap-4 relative">
                         {index !== activities.length - 1 && <div className="absolute left-2 top-6 bottom-[-24px] w-px bg-slate-100"></div>}
-                        <div className={`w-4 h-4 rounded-full mt-1 flex-shrink-0 z-10 ring-4 ring-white ${activity.status === 'completed' ? 'bg-emerald-500' :
-                                activity.status === 'incorrect' ? 'bg-red-500' : 'bg-orange-500'
+                        <div className={`w-4 h-4 rounded-full mt-1 shrink-0 z-10 ring-4 ring-white ${activity.status === 'completed' ? 'bg-emerald-500' :
+                            activity.status === 'incorrect' ? 'bg-red-500' : 'bg-orange-500'
                             }`}></div>
                         <div>
                             <p className="text-sm text-slate-900">

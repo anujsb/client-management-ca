@@ -1,37 +1,32 @@
-import { signIn } from "@/auth";
-import { AuthError } from "next-auth";
+"use client";
+
+import { loginAction } from "@/actions/auth";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage({
     searchParams,
 }: {
     searchParams: { error?: string };
 }) {
+    const router = useRouter();
 
     // The robust Server Action
     const handleLogin = async (formData: FormData) => {
-        "use server";
-        try {
-            await signIn("credentials", {
-                email: formData.get("email"),
-                password: formData.get("password"),
-                redirectTo: "/dashboard",
-            });
-        } catch (error) {
-            if (error instanceof AuthError) {
-                // You could handle specific auth errors here if you wanted
-                console.error("Auth Error:", error.type);
-            }
-            // CRITICAL: We MUST rethrow the error. 
-            // Next.js uses errors to trigger redirects. If we swallow it, the redirect fails.
-            throw error;
+        const result = await loginAction(formData);
+        if (result.success) {
+            router.push("/dashboard");
+            router.refresh();
+        } else {
+            // Error handling is managed by the searchParams check in the UI
+            console.error(result.error);
         }
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-white via-blue-50 to-white flex items-center justify-center px-4 py-12">
+        <div className="min-h-screen bg-linear-to-br from-white via-blue-50 to-white flex items-center justify-center px-4 py-12">
             {/* Left side - Branding */}
             <div className="hidden lg:flex lg:w-1/2 flex-col justify-center items-start max-w-lg">
                 <Link href="/" className="mb-8 flex items-center gap-2">
@@ -48,19 +43,19 @@ export default function LoginPage({
                 </p>
                 <div className="space-y-4 text-slate-700">
                     <div className="flex gap-3 items-start">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 flex-shrink-0 mt-0.5">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 shrink-0 mt-0.5">
                             <span className="text-blue-600 text-sm">✓</span>
                         </div>
                         <p className="text-sm">Send automated WhatsApp requests to clients</p>
                     </div>
                     <div className="flex gap-3 items-start">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 flex-shrink-0 mt-0.5">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 shrink-0 mt-0.5">
                             <span className="text-blue-600 text-sm">✓</span>
                         </div>
                         <p className="text-sm">Track document submissions in real-time</p>
                     </div>
                     <div className="flex gap-3 items-start">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 flex-shrink-0 mt-0.5">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 shrink-0 mt-0.5">
                             <span className="text-blue-600 text-sm">✓</span>
                         </div>
                         <p className="text-sm">Manage multiple clients and document types</p>

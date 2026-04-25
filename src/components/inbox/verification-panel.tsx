@@ -1,7 +1,7 @@
 import { useState, useTransition } from "react";
 import { Check, AlertCircle, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
-import { updateDocumentStatusAction } from "@/app/actions/inbox";
+import { updateDocumentStatusAction } from "@/actions/inbox";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export function VerificationPanel({ request }: { request: any }) {
@@ -18,7 +18,7 @@ export function VerificationPanel({ request }: { request: any }) {
     if (!request) return <div className="w-[360px] bg-white border-l p-6">Select a document</div>;
 
     return (
-        <div className="w-[380px] flex flex-col border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex-shrink-0">
+        <div className="w-[380px] flex flex-col border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shrink-0">
 
             {/* Header */}
             <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50">
@@ -62,7 +62,7 @@ export function VerificationPanel({ request }: { request: any }) {
                 {/* Real Audit Trail from Database */}
                 <div>
                     <h3 className="font-semibold text-sm text-slate-900 mb-4">Document Audit Trail</h3>
-                    <div className="space-y-4 relative before:absolute before:inset-0 before:ml-2 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 before:to-transparent">
+                    <div className="space-y-4 relative before:absolute before:inset-0 before:ml-2 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-linear-to-b before:from-transparent before:via-slate-200 before:to-transparent">
 
                         {request.status === 'incorrect' && (
                             <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">

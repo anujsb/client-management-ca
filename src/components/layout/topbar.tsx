@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export function Topbar() {
     return (
-        <header className="h-16 bg-white border-b border-border/50 flex items-center justify-between px-8 flex-shrink-0">
+        <header className="h-16 bg-white border-b border-border/50 flex items-center justify-between px-8 shrink-0">
             <div className="relative w-96">
                 <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input

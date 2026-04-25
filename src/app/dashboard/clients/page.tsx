@@ -13,7 +13,9 @@ import { ClientDataTable } from "@/components/clients/client-data-table";
 
 export default async function ClientsPage() {
     const session = await auth();
-    const userId = session!.user.id as string;
+    const userId = session?.user?.id as string;
+
+    if (!userId) return null;
 
     // 1. Fetch Real Database Data
     const caClients = await db.select().from(clients).where(eq(clients.caId, userId)).orderBy(desc(clients.createdAt));
