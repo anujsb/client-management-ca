@@ -1,16 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Search, MoreHorizontal } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Search } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import {
-    Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { NewRequestSheet } from "@/components/requests/new-request-sheet";
 
-export function ClientDataTable({ clientsData }: { clientsData: any[] }) {
-    // 1. REAL FUNCTIONALITY: Live Search State
+export function ClientDataTable({ clientsData, templates }: { clientsData: any[], templates: any[] }) {
     const [searchQuery, setSearchQuery] = useState("");
+    const router = useRouter();
 
     const filteredClients = clientsData.filter(client =>
         client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -19,10 +19,8 @@ export function ClientDataTable({ clientsData }: { clientsData: any[] }) {
 
     return (
         <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden flex flex-col">
-
             <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-900/20">
                 <h3 className="font-semibold text-slate-900 dark:text-slate-100">Client Directory</h3>
-
                 <div className="flex items-center gap-3">
                     <div className="relative w-64">
                         <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -34,13 +32,6 @@ export function ClientDataTable({ clientsData }: { clientsData: any[] }) {
                             className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg pl-9 pr-4 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition"
                         />
                     </div>
-
-                    {/* DEAD UI COMMENTED OUT: 
-          <div className="flex items-center gap-2">
-            <select>...</select>
-            <button>Sliders</button>
-          </div>
-          */}
                 </div>
             </div>
 
@@ -48,31 +39,32 @@ export function ClientDataTable({ clientsData }: { clientsData: any[] }) {
                 <Table>
                     <TableHeader>
                         <TableRow className="bg-slate-50/80 dark:bg-slate-900/50 hover:bg-slate-50/80 border-b border-slate-200 dark:border-slate-800">
-                            {/* <TableHead className="w-12 text-center py-3"><Checkbox /></TableHead> */}
                             <TableHead className="text-xs font-semibold text-slate-500 uppercase tracking-wider py-3 pl-6">Client Name</TableHead>
                             <TableHead className="text-xs font-semibold text-slate-500 uppercase tracking-wider py-3">Entity Type</TableHead>
                             <TableHead className="text-xs font-semibold text-slate-500 uppercase tracking-wider py-3">Status</TableHead>
                             <TableHead className="text-xs font-semibold text-slate-500 uppercase tracking-wider py-3">Last Contact</TableHead>
                             <TableHead className="text-xs font-semibold text-slate-500 uppercase tracking-wider py-3">Tags</TableHead>
-                            <TableHead className="w-16 text-right py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider pr-6">Action</TableHead>
+                            <TableHead className="w-24 text-right py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider pr-6">Action</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {filteredClients.length === 0 ? (
                             <TableRow><TableCell colSpan={6} className="text-center py-8 text-slate-500">No clients found matching "{searchQuery}"</TableCell></TableRow>
                         ) : filteredClients.map((client) => (
-                            <TableRow key={client.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800/50 transition-colors group">
-                                {/* <TableCell className="text-center py-4"><Checkbox /></TableCell> */}
-
+                            <TableRow
+                                key={client.id}
+                                onClick={() => router.push(`/dashboard/details?id=${client.id}`)}
+                                className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800/50 transition-colors group cursor-pointer"
+                            >
                                 <TableCell className="py-4 pl-6">
                                     <div className="flex items-center gap-3">
-                                        <Avatar className="w-9 h-9 border border-slate-100 dark:border-slate-800">
+                                        <Avatar className="w-9 h-9 border border-slate-100 dark:border-slate-800 group-hover:border-orange-200 transition">
                                             <AvatarFallback className="bg-indigo-50 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-400 text-xs font-bold">
                                                 {client.name.substring(0, 2).toUpperCase()}
                                             </AvatarFallback>
                                         </Avatar>
                                         <div>
-                                            <p className="font-semibold text-sm text-slate-900 dark:text-slate-100">{client.name}</p>
+                                            <p className="font-semibold text-sm text-slate-900 dark:text-slate-100 group-hover:text-orange-600 transition">{client.name}</p>
                                             <p className="text-[10px] text-slate-500 font-mono mt-0.5">GST: {client.gstin || "N/A"}</p>
                                         </div>
                                     </div>
@@ -117,22 +109,23 @@ export function ClientDataTable({ clientsData }: { clientsData: any[] }) {
                                     </div>
                                 </TableCell>
 
-                                <TableCell className="text-right py-4 pr-6">
-                                    <button className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <MoreHorizontal className="w-5 h-5" />
-                                    </button>
+                                {/* Stop propagation so clicking the button doesn't trigger the row click */}
+                                <TableCell className="text-right py-4 pr-6" onClick={(e) => e.stopPropagation()}>
+                                    <NewRequestSheet
+                                        clients={[client]}
+                                        templates={templates}
+                                        customTrigger={
+                                            <button className="text-[10px] font-medium bg-orange-50 text-orange-600 hover:bg-orange-100 px-3 py-1.5 rounded-lg transition border border-orange-200">
+                                                Send MSG
+                                            </button>
+                                        }
+                                    />
                                 </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </div>
-
-            {/* DEAD UI COMMENTED OUT: Pagination 
-      <div className="p-4 border-t...">
-        <p>Showing 1 to X...</p>
-      </div> 
-      */}
         </div>
     );
 }

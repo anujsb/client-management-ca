@@ -22,8 +22,8 @@ import {
 } from "@/components/ui/select";
 import { dispatchRequestAction } from "@/actions/requests"; // Import the Twilio action
 
-type Client = { id: string; name: string; phone: string; gstin: string };
-type Template = { id: string; name: string; content: string };
+type Client = { id: string; name: string; phone?: string; gstin?: string | null };
+type Template = { id: string; name: string; content?: string; body?: string };
 
 export function NewRequestSheet({
     clients,
@@ -35,38 +35,54 @@ export function NewRequestSheet({
     customTrigger?: React.ReactNode;
 }) {
     const [open, setOpen] = useState(false);
-    const [selectedClientId, setSelectedClientId] = useState<string>("");
+
+    // Default to the first client if only one is passed (e.g. from Client Detail page)
+    const defaultClientId = clients.length === 1 ? clients[0].id : "";
+
+    const [selectedClientId, setSelectedClientId] = useState<string>(defaultClientId);
     const [selectedTemplateId, setSelectedTemplateId] = useState<string>("");
     const [messagePreview, setMessagePreview] = useState<string>("");
     const [isPending, startTransition] = useTransition();
-
 
     useEffect(() => {
         if (!selectedTemplateId) {
             setMessagePreview("");
             return;
         }
+
         const template = templates.find((t) => t.id === selectedTemplateId);
         const client = clients.find((c) => c.id === selectedClientId);
 
         if (template) {
-            let draft = template.content;
+            // FIX: Safely fallback to empty string, and support both 'content' and 'body' keys
+            let draft = template.content || template.body || "";
 
-            // Replace Client Name
-            if (client) {
-                draft = draft.replace(/{{client_name}}/g, client.name);
+            if (draft) {
+                // Safely Replace Client Name (supports both {client_name} and {{client_name}})
+                if (client) {
+                    draft = draft
+                        .replace(/\{\{client_name\}\}/g, client.name)
+                        .replace(/\{client_name\}/g, client.name);
+                }
+
+                // Dynamically calculate and replace the previous month (e.g., "March")
+                const date = new Date();
+                date.setMonth(date.getMonth() - 1);
+                const previousMonth = date.toLocaleString('en-IN', { month: 'long' });
+
+                draft = draft
+                    .replace(/\{\{month\}\}/g, previousMonth)
+                    .replace(/\{month\}/g, previousMonth);
+
+                // Replace generic document type placeholder if it exists in the template
+                draft = draft
+                    .replace(/\{\{document_type\}\}/g, "[Required Document]")
+                    .replace(/\{document_type\}/g, "[Required Document]");
             }
-
-            // Dynamically calculate and replace the previous month (e.g., "March")
-            const date = new Date();
-            date.setMonth(date.getMonth() - 1);
-            const previousMonth = date.toLocaleString('en-IN', { month: 'long' });
-            draft = draft.replace(/{{month}}/g, previousMonth);
 
             setMessagePreview(draft);
         }
     }, [selectedClientId, selectedTemplateId, clients, templates]);
-
 
     const handleDispatch = () => {
         const template = templates.find((t) => t.id === selectedTemplateId);
@@ -76,7 +92,9 @@ export function NewRequestSheet({
             try {
                 await dispatchRequestAction(selectedClientId, template.name, messagePreview);
                 setOpen(false);
-                // Optional: Add a Shadcn toast here to show success
+                // Reset state after successful send
+                setSelectedTemplateId("");
+                setMessagePreview("");
             } catch (error) {
                 console.error("Failed to send:", error);
                 alert("Failed to send message. Check Twilio configuration.");
@@ -114,7 +132,7 @@ export function NewRequestSheet({
                             <SelectContent>
                                 {clients.map((client) => (
                                     <SelectItem key={client.id} value={client.id}>
-                                        {client.name} <span className="text-slate-400 ml-1">({client.gstin})</span>
+                                        {client.name} {client.gstin && <span className="text-slate-400 ml-1">({client.gstin})</span>}
                                     </SelectItem>
                                 ))}
                             </SelectContent>

@@ -1,5 +1,6 @@
 "use client";
 
+import { use } from "react";
 import { loginAction } from "@/actions/auth";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -9,9 +10,12 @@ import { useRouter } from "next/navigation";
 export default function LoginPage({
     searchParams,
 }: {
-    searchParams: { error?: string };
+    searchParams: Promise<{ error?: string }>;
 }) {
     const router = useRouter();
+
+    // NEXT.JS 15 FIX: Unwrap the searchParams promise using React's use() hook
+    const unwrappedParams = use(searchParams);
 
     // The robust Server Action
     const handleLogin = async (formData: FormData) => {
@@ -85,7 +89,7 @@ export default function LoginPage({
                         </p>
                     </div>
 
-                    {searchParams?.error === "CredentialsSignin" && (
+                    {unwrappedParams?.error === "CredentialsSignin" && (
                         <div className="rounded-lg bg-red-50 p-4 text-sm text-red-700 border border-red-200 mb-6">
                             <p className="font-medium">Invalid credentials</p>
                             <p>Please check your email and password and try again.</p>

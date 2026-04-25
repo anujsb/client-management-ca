@@ -1,8 +1,11 @@
-import { Mail, Phone, CheckCircle2, MessageSquare } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+"use client";
 
-export function ClientHeader({ client, globalStatus }: { client: any, globalStatus: string }) {
+import { Mail, Phone, CheckCircle2, MessageSquare } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { NewRequestSheet } from "@/components/requests/new-request-sheet";
+
+export function ClientHeader({ client, globalStatus, templates }: { client: any, globalStatus: string, templates: any[] }) {
     return (
         <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm mb-6">
             <div className="flex justify-between items-start">
@@ -17,10 +20,10 @@ export function ClientHeader({ client, globalStatus }: { client: any, globalStat
                         <div className="flex items-center gap-3 mb-1">
                             <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">{client.name}</h2>
                             <Badge className={`border-none font-medium px-2 py-0.5 shadow-none ${globalStatus === 'Received' ? 'bg-emerald-50 text-emerald-700' :
-                                    globalStatus === 'Flagged' ? 'bg-red-50 text-red-700' : 'bg-orange-50 text-orange-700'
+                                globalStatus === 'Flagged' ? 'bg-red-50 text-red-700' : 'bg-orange-50 text-orange-700'
                                 }`}>
                                 <div className={`w-1.5 h-1.5 rounded-full mr-1.5 ${globalStatus === 'Received' ? 'bg-emerald-500' :
-                                        globalStatus === 'Flagged' ? 'bg-red-500' : 'bg-orange-500'
+                                    globalStatus === 'Flagged' ? 'bg-red-500' : 'bg-orange-500'
                                     }`}></div>
                                 {globalStatus}
                             </Badge>
@@ -43,16 +46,24 @@ export function ClientHeader({ client, globalStatus }: { client: any, globalStat
                     <button className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition shadow-sm">
                         <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Mark Verified
                     </button>
-                    <button className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm">
-                        <MessageSquare className="w-4 h-4" /> Message Agent
-                    </button>
+
+                    {/* Dispatch Request Sheet Wrapper */}
+                    <NewRequestSheet
+                        clients={[client]}
+                        templates={templates}
+                        customTrigger={
+                            <button className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm">
+                                <MessageSquare className="w-4 h-4" /> Dispatch Request
+                            </button>
+                        }
+                    />
                 </div>
             </div>
 
             <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs text-slate-500">
                 <div className="flex items-center gap-2">
                     <span>Assigned Staff:</span>
-                    <Avatar className="w-5 h-5"><AvatarImage src="https://i.pravatar.cc/150?img=5" /><AvatarFallback>EF</AvatarFallback></Avatar>
+                    <Avatar className="w-5 h-5"><AvatarFallback>EF</AvatarFallback></Avatar>
                     <span className="font-medium text-slate-700 dark:text-slate-300">Elena Franci</span>
                 </div>
                 <div className="flex gap-4">
