@@ -1,8 +1,15 @@
 "use client";
 
+import { useState, useEffect } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export function CollectionChart({ data }: { data: any[] }) {
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
     // If no data, show empty state
     if (!data || data.length === 0) {
         return (
@@ -11,6 +18,8 @@ export function CollectionChart({ data }: { data: any[] }) {
             </div>
         );
     }
+
+    if (!isMounted) return <div className="h-[300px] w-full bg-slate-50 dark:bg-slate-900/50 animate-pulse rounded-xl" />;
 
     return (
         <div className="h-[300px] w-full">

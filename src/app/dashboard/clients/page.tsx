@@ -11,7 +11,9 @@ import { getTemplatesAction } from "@/app/actions/templates";
 
 export default async function ClientsPage() {
     const session = await auth();
-    const userId = session!.user.id as string;
+    const userId = session?.user?.id as string;
+
+    if (!userId) return null;
 
     const caClients = await db.select().from(clients).where(eq(clients.caId, userId)).orderBy(desc(clients.createdAt));
     const caRequests = await db.select().from(requests).where(eq(requests.caId, userId));
